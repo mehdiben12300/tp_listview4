@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mes contacts</string>
+    <string name="title_detail">Détail du contact</string>
+    <string name="title_nouveau_contact">Nouveau contact</string>
+    <string name="title_carte">Localisation du contact</string>
+
+    <string name="label_nom">Nom *</string>
+    <string name="label_prenom">Prénom *</string>
+    <string name="label_telephone">Téléphone *</string>
+    <string name="label_email">E-mail</string>
+    <string name="label_coordonnees_gps">Coordonnées GPS</string>
+    <string name="label_latitude">Latitude (-90° à 90°)</string>
+    <string name="label_longitude">Longitude (-180° à 180°)</string>
+
+    <string name="hint_nom">Entrez le nom</string>
+    <string name="hint_prenom">Entrez le prénom</string>
+    <string name="hint_telephone">Numéro de téléphone</string>
+    <string name="hint_email">Adresse e-mail</string>
+    <string name="hint_latitude">Ex : 48.8566</string>
+    <string name="hint_longitude">Ex : 2.3522</string>
+    <string name="hint_search">Rechercher par nom, prénom ou tél…</string>
+
+    <string name="btn_appeler">Appeler</string>
+    <string name="btn_email">Envoyer un e-mail</string>
+    <string name="btn_choisir_photo">Choisir\nune photo</string>
+    <string name="btn_prendre_photo">Prendre\nune photo</string>
+    <string name="btn_voir_carte">Voir sur la carte</string>
+    <string name="btn_enregistrer">Enregistrer</string>
+    <string name="btn_annuler">Annuler</string>
+
+    <string name="err_nom_vide">Le nom ne peut pas être vide</string>
+    <string name="err_prenom_vide">Le prénom ne peut pas être vide</string>
+    <string name="err_telephone_vide">Le numéro de téléphone ne peut pas être vide</string>
+    <string name="err_latitude_invalide">La latitude doit être comprise entre -90 et 90</string>
+    <string name="err_longitude_invalide">La longitude doit être comprise entre -180 et 180</string>
+    <string name="err_gps_invalide">Veuillez renseigner à la fois la latitude et la longitude avec des valeurs numériques valides.</string>
+    <string name="msg_coordonnees_absentes">Ce contact ne possède pas de coordonnées GPS : aucune position à afficher.</string>
+
+    <string name="msg_photo_annulee">Sélection de photo annulée</string>
+    <string name="msg_camera_annulee">Prise de photo annulée</string>
+    <string name="msg_contact_modifie">Contact mis à jour : %1$s</string>
+    <string name="msg_contact_ajoute">Nouveau contact ajouté : %1$s</string>
+    <string name="msg_contact_supprime">Contact supprimé</string>
+    <string name="msg_aucune_app_tel">Aucune application pour passer l\'appel</string>
+    <string name="msg_aucune_app_mail">Aucune application de messagerie disponible</string>
+    <string name="msg_aucun_contact">Aucun contact trouvé</string>
+    <string name="msg_aucun_contact_recherche">Aucun contact ne correspond à votre recherche</string>
+
+    <string name="dlg_supprimer_titre">Supprimer le contact</string>
+    <string name="dlg_supprimer_msg">Voulez-vous vraiment supprimer %1$s ?</string>
+    <string name="dlg_oui">Supprimer</string>
+    <string name="dlg_non">Annuler</string>
+
+    <!-- V4 : persistance SQLite -->
+    <string name="title_parametres">Paramètres</string>
+    <string name="cd_retour">Retour</string>
+    <string name="cd_ajouter_contact">Ajouter un contact</string>
+    <string name="cd_appeler_contact">Appeler %1$s</string>
+    <string name="contact_sans_nom">Contact</string>
+    <string name="err_email_vide">Veuillez saisir une adresse e-mail</string>
+    <string name="err_email_invalide">Adresse e-mail invalide</string>
+    <string name="err_insertion">L\'insertion du contact a échoué</string>
+    <string name="err_base">Erreur de base de données : %1$s</string>
+    <string name="msg_corriger_erreurs">Veuillez corriger les champs signalés : rien n\'a été enregistré</string>
+    <string name="msg_contact_introuvable">Contact introuvable (il a peut-être été supprimé)</string>
+    <string name="msg_coordonnees_invalides">Coordonnées GPS invalides : la latitude doit être un nombre entre -90 et 90 et la longitude entre -180 et 180.</string>
+    <string name="msg_photo_illisible">Impossible de charger l\'image</string>
+    <string name="msg_galerie_indisponible">Aucune application de galerie disponible</string>
+    <string name="msg_camera_indisponible">Appareil photo indisponible</string>
+
+    <!-- V4 : préférences -->
+    <string name="pref_categorie_affichage">Affichage</string>
+    <string name="pref_categorie_liste">Liste des contacts</string>
+    <string name="pref_taille_police">Taille de police</string>
+    <string name="pref_couleur_preferee">Couleur préférée (du texte)</string>
+    <string name="pref_appel_depuis_liste">Activer l\'appel depuis la liste</string>
+    <string name="pref_appel_resume_oui">Oui : un bouton Appeler est affiché sur chaque ligne</string>
+    <string name="pref_appel_resume_non">Non</string>
+    <string name="couleur_defaut" translatable="false">#000000</string>
+</resources>

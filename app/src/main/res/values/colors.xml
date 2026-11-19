@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_purple">#5C2D91</color>
+    <color name="primary_purple_dark">#431D6E</color>
+    <color name="primary_purple_light">#7C3AED</color>
+    <color name="green_action">#16A34A</color>
+    <color name="green_action_dark">#15803D</color>
+    <color name="blue_action">#2563EB</color>
+    <color name="blue_action_dark">#1D4ED8</color>
+    <color name="purple_action">#5B21B6</color>
+    <color name="text_primary">#1F2937</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="border_color">#E5E7EB</color>
+    <color name="bg_light">#F3F4F6</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="gps_badge_bg">#EFF6FF</color>
+    <color name="gps_badge_text">#1D4ED8</color>
+    <color name="gps_warning_bg">#FEF3C7</color>
+    <color name="gps_warning_text">#92400E</color>
+</resources>
