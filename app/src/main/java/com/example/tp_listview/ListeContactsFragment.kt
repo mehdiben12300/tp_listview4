@@ -13,10 +13,13 @@ import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tp_listview.data.Contact
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
 
 /**
  * Liste des contacts chargée depuis SQLite, filtrage au fil de la saisie,
@@ -67,6 +70,9 @@ class ListeContactsFragment : Fragment(R.layout.fragment_liste_contacts) {
                 R.id.action_parametres -> {
                     naviguerVers(ParametresFragment()); true
                 }
+                R.id.action_benchmark -> {
+                    lancerBenchmark(); true
+                }
                 else -> false
             }
         }
@@ -75,10 +81,28 @@ class ListeContactsFragment : Fragment(R.layout.fragment_liste_contacts) {
     private fun setupRecyclerView() {
         adapter = ContactAdapter(
             onContactClick = { id -> naviguerVers(DetailContactFragment.newInstance(id)) },
-            onAppelClick = { telephone -> composerNumero(telephone) }
+            onAppelClick = { telephone -> composerNumero(telephone) },
+            onFavoriClick = { contact ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.toggleFavori(contact)
+                }
+            }
         )
         rvContacts.layoutManager = LinearLayoutManager(requireContext())
         rvContacts.adapter = adapter
+    }
+
+    private fun lancerBenchmark() {
+        Toast.makeText(requireContext(), "Exécution du benchmark en cours...", Toast.LENGTH_SHORT).show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            val res = viewModel.executerBenchmark100Contacts()
+            val ratio = if (res.dureeAvecMs > 0) res.dureeSansMs.toDouble() / res.dureeAvecMs else 1.0
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(R.string.dlg_benchmark_titre)
+                .setMessage(getString(R.string.dlg_benchmark_msg, res.dureeSansMs, res.dureeAvecMs, ratio))
+                .setPositiveButton(R.string.dlg_fermer, null)
+                .show()
+        }
     }
 
     private fun setupSearch() {

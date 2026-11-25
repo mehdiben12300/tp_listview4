@@ -16,7 +16,8 @@ data class Contact(
     val email: String? = null,
     val photoUri: String? = null,
     val latitude: Double? = null,
-    val longitude: Double? = null
+    val longitude: Double? = null,
+    val favori: Boolean = false
 ) {
 
     val nomComplet: String

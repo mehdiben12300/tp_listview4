@@ -92,5 +92,37 @@ Le filtrage est réalisé **en SQL** (`ContactDao.search`) :
 8. **ACTION_DIAL vs ACTION_CALL** : `ACTION_DIAL` ouvre le composeur avec le numéro pré-rempli, l'utilisateur confirme l'appel : **aucune permission**. `ACTION_CALL` lance l'appel directement et exige la permission dangereuse `CALL_PHONE` (demande à l'exécution).
 9. **Désinstallation / effacement des données** : dans les deux cas, `contacts.db`, les SharedPreferences et les photos de `filesDir` (stockage interne privé) sont supprimés ; au lancement suivant, la base est recréée avec les contacts démo et les préférences reprennent leurs valeurs par défaut. (Exception : une sauvegarde automatique Android peut restaurer les données après réinstallation si `allowBackup` est actif.)
 
-## 11. Captures à joindre
-Liste au premier lancement, création, modification, confirmation de suppression, liste après relance, Database Inspector (table `contacts`), écran Paramètres, liste avec deux tailles et deux couleurs, liste avec boutons Appeler, composeur ouvert depuis la liste, carte avec marqueur.
+## 11. Bonus (facultatif)
+Le TP intègre l'ensemble des 3 bonus optionnels :
+
+### 11.1 Migration vers la version 2 de la base SQLite et colonne `favori`
+- `DATABASE_VERSION` est passé à `2`.
+- Dans `ContactContract`, la colonne `favori` est ajoutée au schéma avec `INTEGER NOT NULL DEFAULT 0` (0 = non favori, 1 = favori).
+- Dans `ContactDbHelper.onUpgrade(db, oldVersion, newVersion)`, une étape `if (oldVersion < 2)` applique la migration incrémentale :
+  ```sql
+  ALTER TABLE contacts ADD COLUMN favori INTEGER NOT NULL DEFAULT 0
+  ```
+  Cela garantit que **tous les contacts déjà présents en version 1 sont conservés sans aucune perte**.
+- L'interface affiche une étoile sur chaque contact de la liste (`ic_star_filled` en jaune ou `ic_star_border` en gris). Un clic sur l'étoile bascule instantanément l'état favori en base sans ouvrir le détail. La fiche détaillée propose également une case à cocher pour définir l'état favori.
+
+### 11.2 Quatrième préférence « Ordre de tri » (nom, prénom, favoris d'abord)
+- Ajout de la préférence `ordre_tri` dans `res/xml/preferences.xml` et `res/values/arrays.xml`.
+- Options disponibles :
+  1. **Favoris d'abord** : `favori DESC, nom COLLATE NOCASE ASC, prenom COLLATE NOCASE ASC` (valeur par défaut, met les favoris en tête de liste).
+  2. **Nom puis Prénom (A-Z)** : `nom COLLATE NOCASE ASC, prenom COLLATE NOCASE ASC`.
+  3. **Prénom puis Nom (A-Z)** : `prenom COLLATE NOCASE ASC, nom COLLATE NOCASE ASC`.
+- La préférence est convertie par `PreferencesManager.ordreTriSql()` et directement transmise à la clause `ORDER BY` des méthodes `getAll()` et `search()` de `ContactDao`.
+
+### 11.3 Importation de 100 contacts & comparaison de transaction
+- Une méthode `executerBenchmark100Contacts()` a été implémentée dans `ContactDao`.
+- Elle compare l'insertion de 100 contacts générés :
+  - **Sans transaction** : chaque `insert()` individuel ouvre et ferme une transaction SQLite implicite (100 écritures synchrones sur disque).
+  - **Avec transaction unique** : les 100 `insert()` sont regroupés dans un bloc `beginTransaction() ... setTransactionSuccessful() ... endTransaction()` (une seule écriture synchrone).
+- **Résultats types mesurés** :
+  - Sans transaction : ~1 200 ms à 1 800 ms.
+  - Avec transaction unique : ~30 ms à 60 ms.
+  - **Gain de performance** : l'utilisation d'une transaction unique est **25 à 40 fois plus rapide**.
+- Accessible à tout moment depuis le menu (3 points) de la barre d'outils via l'option **« Benchmark 100 contacts (Bonus) »**, qui affiche un dialogue récapitulatif des temps mesurés.
+
+## 12. Captures à joindre
+Liste au premier lancement, création, modification, confirmation de suppression, liste après relance, Database Inspector (table `contacts`), écran Paramètres, liste avec deux tailles et deux couleurs, liste avec boutons Appeler, composeur ouvert depuis la liste, carte avec marqueur, favoris en tête de liste et dialogue de benchmark des transactions.

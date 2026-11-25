@@ -20,7 +20,8 @@ import com.example.tp_listview.data.Contact
  */
 class ContactAdapter(
     private val onContactClick: (contactId: Long) -> Unit,
-    private val onAppelClick: (telephone: String) -> Unit
+    private val onAppelClick: (telephone: String) -> Unit,
+    private val onFavoriClick: ((contact: Contact) -> Unit)? = null
 ) : ListAdapter<Contact, ContactAdapter.ContactViewHolder>(DIFF) {
 
     private var affichage = PreferencesManager.Affichage(
@@ -38,6 +39,7 @@ class ContactAdapter(
         val tvNomPrenom: TextView = itemView.findViewById(R.id.tvItemNomPrenom)
         val tvTelephone: TextView = itemView.findViewById(R.id.tvItemTelephone)
         val tvGpsBadge: TextView = itemView.findViewById(R.id.tvItemGpsBadge)
+        val btnFavori: ImageButton = itemView.findViewById(R.id.btnItemFavori)
         val btnAppeler: ImageButton = itemView.findViewById(R.id.btnItemAppeler)
         val ivChevron: ImageView = itemView.findViewById(R.id.ivItemChevron)
     }
@@ -64,6 +66,10 @@ class ContactAdapter(
             val position = holder.bindingAdapterPosition
             if (position != RecyclerView.NO_POSITION) onAppelClick(getItem(position).telephone)
         }
+        holder.btnFavori.setOnClickListener {
+            val position = holder.bindingAdapterPosition
+            if (position != RecyclerView.NO_POSITION) onFavoriClick?.invoke(getItem(position))
+        }
         return holder
     }
 
@@ -85,6 +91,11 @@ class ContactAdapter(
             holder.itemView.context.getString(R.string.cd_appeler_contact, contact.nomComplet)
 
         PhotoUtils.afficher(holder.ivPhoto, contact.photoUri)
+
+        // Affichage état favori (Bonus)
+        holder.btnFavori.setImageResource(
+            if (contact.favori) R.drawable.ic_star_filled else R.drawable.ic_star_border
+        )
     }
 
     private companion object {

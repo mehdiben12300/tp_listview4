@@ -59,4 +59,9 @@ class ContactTest {
         assertEquals(16f, PreferencesManager.convertirTaille("abc"))
         assertEquals(16f, PreferencesManager.convertirTaille("99"))
     }
+
+    @Test fun contactFavoriParDefautFaux() {
+        assertFalse(contact().favori)
+        assertTrue(contact().copy(favori = true).favori)
+    }
 }

@@ -86,6 +86,17 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Bouton Favori (Bonus) -->
+        <ImageButton
+            android:id="@+id/btnItemFavori"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="6dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_star_border"
+            android:padding="6dp"
+            android:contentDescription="@string/cd_favori" />
+
         <!-- Bouton Appeler : visible seulement si la préférence appel_depuis_liste est activée -->
         <ImageButton
             android:id="@+id/btnItemAppeler"

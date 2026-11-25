@@ -27,4 +27,16 @@
         <item>#C62828</item>
         <item>#6A1B9A</item>
     </string-array>
+
+    <!-- Ordre de tri (Bonus) : libellés affichés / valeurs stockées -->
+    <string-array name="ordres_tri_libelles">
+        <item>Favoris d\'abord</item>
+        <item>Nom puis Prénom (A-Z)</item>
+        <item>Prénom puis Nom (A-Z)</item>
+    </string-array>
+    <string-array name="ordres_tri_valeurs">
+        <item>favoris</item>
+        <item>nom</item>
+        <item>prenom</item>
+    </string-array>
 </resources>

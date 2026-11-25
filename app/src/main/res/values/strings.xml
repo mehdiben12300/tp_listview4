@@ -78,4 +78,14 @@
     <string name="pref_appel_resume_oui">Oui : un bouton Appeler est affiché sur chaque ligne</string>
     <string name="pref_appel_resume_non">Non</string>
     <string name="couleur_defaut" translatable="false">#000000</string>
+
+    <!-- V4 Bonus : Ordre de tri et Benchmark -->
+    <string name="pref_categorie_tri">Tri et organisation</string>
+    <string name="pref_ordre_tri">Ordre de tri</string>
+    <string name="label_favori">Ajouter aux favoris</string>
+    <string name="cd_favori">Favori</string>
+    <string name="action_benchmark">Benchmark 100 contacts (Bonus)</string>
+    <string name="dlg_benchmark_titre">Benchmark transactions SQLite (100 contacts)</string>
+    <string name="dlg_benchmark_msg">Résultats de l\'insertion de 100 contacts générés :\n\n• Sans transaction : %1$d ms\n• Avec transaction unique : %2$d ms\n\nGain de performance : la transaction est %3$.1fx plus rapide !</string>
+    <string name="dlg_fermer">Fermer</string>
 </resources>

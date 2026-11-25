@@ -34,7 +34,7 @@ com.example.tp_listview
 └── PhotoUtils.kt              copie des photos dans filesDir/photos, affichage
 ```
 
-## Schéma
+## Schéma (V2 avec Bonus)
 ```sql
 CREATE TABLE contacts (
     _id        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,7 +44,8 @@ CREATE TABLE contacts (
     email      TEXT,
     photo_uri  TEXT,
     latitude   REAL,
-    longitude  REAL
+    longitude  REAL,
+    favori     INTEGER NOT NULL DEFAULT 0
 );
 ```
 
@@ -54,5 +55,12 @@ CREATE TABLE contacts (
 | `taille_police` | ListPreference | 14 / 16 / 20 sp | 16 | nom, prénom, téléphone (liste + détail) |
 | `couleur_preferee` | ListPreference | Noir, Bleu, Vert, Rouge, Violet | Noir | nom et prénom (liste + détail) |
 | `appel_depuis_liste` | SwitchPreferenceCompat | booléen | false | bouton Appeler (ACTION_DIAL) sur chaque ligne |
+| `ordre_tri` | ListPreference | Favoris d'abord / Nom / Prénom | Favoris d'abord | tri de la liste (clause ORDER BY) (Bonus) |
+
+## Bonus (Facultatif)
+- **Migration V1 -> V2 sans perte de données** : passage à `DATABASE_VERSION = 2` avec `ALTER TABLE contacts ADD COLUMN favori INTEGER NOT NULL DEFAULT 0` dans `onUpgrade()`.
+- **Bascule Favori interactive** : icône étoile sur chaque ligne et case à cocher dans la fiche détaillée.
+- **Ordre de tri dynamique** : choix entre "Favoris d'abord", "Nom puis Prénom" ou "Prénom puis Nom" directement appliqué dans les requêtes SQLite via la clause `ORDER BY`.
+- **Benchmark d'importation de 100 contacts** : accessible depuis le menu de l'application (option "Benchmark 100 contacts") pour mesurer et comparer la durée avec vs sans transaction unique.
 
 Le compte rendu détaillé (choix techniques, tests, réponses aux questions) est dans [`Compte_Rendu_TP_Contacts_V4.md`](Compte_Rendu_TP_Contacts_V4.md).

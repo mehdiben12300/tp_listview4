@@ -70,6 +70,18 @@
                     android:contentDescription="Prendre une photo" />
             </RelativeLayout>
 
+            <!-- Favori (Bonus) -->
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cbFavori"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/label_favori"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:buttonTint="@color/purple_action"
+                android:layout_marginBottom="16dp" />
+
             <!-- Champ Nom -->
             <TextView
                 android:layout_width="wrap_content"

@@ -30,6 +30,7 @@ import java.io.File
 class ContactViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dao = ContactDao(ContactDbHelper.getInstance(application))
+    private val preferences = PreferencesManager(application)
 
     private val _contacts = MutableLiveData<List<Contact>>(emptyList())
     val contacts: LiveData<List<Contact>> = _contacts
@@ -52,14 +53,15 @@ class ContactViewModel(application: Application) : AndroidViewModel(application)
         rafraichir()
     }
 
-    /** Recharge la liste depuis la base en tenant compte du filtre courant. */
+    /** Recharge la liste depuis la base en tenant compte du filtre courant et de la préférence de tri. */
     fun rafraichir() {
         jobChargement?.cancel()  // une nouvelle saisie annule la requête précédente
         val filtre = searchQuery
+        val ordre = preferences.ordreTriSql()
         jobChargement = viewModelScope.launch {
             val liste = try {
                 withContext(Dispatchers.IO) {
-                    if (filtre.isBlank()) dao.getAll() else dao.search(filtre)
+                    if (filtre.isBlank()) dao.getAll(ordre) else dao.search(filtre, ordre)
                 }
             } catch (e: SQLiteException) {
                 Log.e(TAG, "Lecture de la base impossible", e)
@@ -116,6 +118,28 @@ class ContactViewModel(application: Application) : AndroidViewModel(application)
                 ResultatOperation.Erreur(e.message.orEmpty())
             }
         }.await().also { rafraichir() }
+
+    /** Bascule l'état favori d'un contact (Bonus). */
+    suspend fun toggleFavori(contact: Contact): ResultatOperation =
+        viewModelScope.async(Dispatchers.IO) {
+            try {
+                val nouveauFavori = !contact.favori
+                if (dao.toggleFavori(contact.id, nouveauFavori) > 0) {
+                    ResultatOperation.Succes(contact.id)
+                } else {
+                    ResultatOperation.Introuvable
+                }
+            } catch (e: SQLiteException) {
+                Log.e(TAG, "toggleFavori", e)
+                ResultatOperation.Erreur(e.message.orEmpty())
+            }
+        }.await().also { rafraichir() }
+
+    /** Exécute le benchmark d'importation de 100 contacts avec et sans transaction (Bonus). */
+    suspend fun executerBenchmark100Contacts(): ContactDao.ResultatBenchmark =
+        withContext(Dispatchers.IO) {
+            dao.executerBenchmark100Contacts()
+        }
 
     /** Supprime une photo uniquement si elle se trouve dans le stockage interne de l'application. */
     private fun supprimerPhotoInterne(chemin: String?) {

@@ -63,6 +63,7 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
 
     private lateinit var toolbarDetail: MaterialToolbar
     private lateinit var ivDetailPhoto: ImageView
+    private lateinit var cbFavori: com.google.android.material.checkbox.MaterialCheckBox
     private lateinit var etNom: EditText
     private lateinit var etPrenom: EditText
     private lateinit var etTelephone: EditText
@@ -111,6 +112,7 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
 
         toolbarDetail = view.findViewById(R.id.toolbarDetail)
         ivDetailPhoto = view.findViewById(R.id.ivDetailPhoto)
+        cbFavori = view.findViewById(R.id.cbFavori)
         etNom = view.findViewById(R.id.etNom)
         etPrenom = view.findViewById(R.id.etPrenom)
         etTelephone = view.findViewById(R.id.etTelephone)
@@ -165,6 +167,7 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
             etEmail.setText(contact.email.orEmpty())
             etLatitude.setText(contact.latitude?.toString().orEmpty())
             etLongitude.setText(contact.longitude?.toString().orEmpty())
+            cbFavori.isChecked = contact.favori
             photoOriginale = contact.photoUri
             photoCourante = contact.photoUri
             PhotoUtils.afficher(ivDetailPhoto, photoCourante)
@@ -294,7 +297,8 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
             email = email.ifEmpty { null },
             photoUri = photoCourante,
             latitude = latitude,
-            longitude = longitude
+            longitude = longitude,
+            favori = cbFavori.isChecked
         )
 
         btnEnregistrer.isEnabled = false  // évite un double enregistrement

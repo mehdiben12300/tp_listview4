@@ -16,10 +16,15 @@ class PreferencesManager(context: Context) {
         const val CLE_TAILLE_POLICE = "taille_police"
         const val CLE_COULEUR_PREFEREE = "couleur_preferee"
         const val CLE_APPEL_DEPUIS_LISTE = "appel_depuis_liste"
+        const val CLE_ORDRE_TRI = "ordre_tri"
 
         const val TAILLE_DEFAUT_SP = 16f
         const val COULEUR_DEFAUT = "#000000"
         const val APPEL_DEFAUT = false
+
+        const val TRI_FAVORIS = "favoris"
+        const val TRI_NOM = "nom"
+        const val TRI_PRENOM = "prenom"
 
         private val TAILLES_AUTORISEES = setOf(14f, 16f, 20f)
 
@@ -50,6 +55,14 @@ class PreferencesManager(context: Context) {
     }
 
     fun appelDepuisListe(): Boolean = prefs.getBoolean(CLE_APPEL_DEPUIS_LISTE, APPEL_DEFAUT)
+
+    fun ordreTri(): String = prefs.getString(CLE_ORDRE_TRI, TRI_FAVORIS) ?: TRI_FAVORIS
+
+    fun ordreTriSql(): String = when (ordreTri()) {
+        TRI_NOM -> "${com.example.tp_listview.data.ContactContract.Colonnes.NOM} COLLATE NOCASE ASC, ${com.example.tp_listview.data.ContactContract.Colonnes.PRENOM} COLLATE NOCASE ASC"
+        TRI_PRENOM -> "${com.example.tp_listview.data.ContactContract.Colonnes.PRENOM} COLLATE NOCASE ASC, ${com.example.tp_listview.data.ContactContract.Colonnes.NOM} COLLATE NOCASE ASC"
+        else -> "${com.example.tp_listview.data.ContactContract.Colonnes.FAVORI} DESC, ${com.example.tp_listview.data.ContactContract.Colonnes.NOM} COLLATE NOCASE ASC, ${com.example.tp_listview.data.ContactContract.Colonnes.PRENOM} COLLATE NOCASE ASC"
+    }
 
     fun lireAffichage(): Affichage = Affichage(tailleSp(), couleurTexte(), appelDepuisListe())
 }

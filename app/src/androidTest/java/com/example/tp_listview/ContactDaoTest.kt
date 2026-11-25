@@ -10,6 +10,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -71,5 +72,31 @@ class ContactDaoTest {
         assertTrue(dao.search("0600000001").any { it.prenom == "Kate" }) // espaces ignorés
         assertTrue(dao.search("'; DROP TABLE contacts; --").isEmpty())
         assertTrue(dao.getAll().isNotEmpty())                 // la table existe toujours
+    }
+
+    @Test fun bonusFavoriEtTriEnTeteDeListe() {
+        val idOrdinaire = dao.insert(Contact(nom = "AAA", prenom = "Ordinaire", telephone = "0601010101", favori = false))
+        val idFavori = dao.insert(Contact(nom = "ZZZ", prenom = "Favori", telephone = "0602020202", favori = true))
+
+        val listeTriee = dao.getAll(com.example.tp_listview.data.ContactContract.ORDRE_FAVORIS_D_ABORD)
+        // Le favori ZZZ doit apparaître avant AAA même si son nom commence par Z
+        val indexFavori = listeTriee.indexOfFirst { it.id == idFavori }
+        val indexOrdinaire = listeTriee.indexOfFirst { it.id == idOrdinaire }
+        assertTrue("Le contact favori doit être placé avant le contact non-favori", indexFavori < indexOrdinaire)
+
+        // Test de bascule de favori
+        assertEquals(1, dao.toggleFavori(idOrdinaire, true))
+        assertTrue(dao.getById(idOrdinaire)!!.favori)
+        assertEquals(1, dao.toggleFavori(idOrdinaire, false))
+        Assert.assertFalse(dao.getById(idOrdinaire)!!.favori)
+    }
+
+    @Test fun bonusBenchmarkImport100Contacts() {
+        val resultat = dao.executerBenchmark100Contacts()
+        assertEquals(100, resultat.nbContacts)
+        assertTrue(resultat.dureeSansMs >= 0)
+        assertTrue(resultat.dureeAvecMs >= 0)
+        // Une transaction unique doit être plus rapide ou égale à l'insertion sans transaction
+        assertTrue(resultat.dureeAvecMs <= resultat.dureeSansMs)
     }
 }

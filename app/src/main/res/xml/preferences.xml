@@ -25,6 +25,15 @@
 
     <PreferenceCategory app:title="@string/pref_categorie_liste">
 
+        <ListPreference
+            app:key="ordre_tri"
+            app:title="@string/pref_ordre_tri"
+            app:entries="@array/ordres_tri_libelles"
+            app:entryValues="@array/ordres_tri_valeurs"
+            app:defaultValue="favoris"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true" />
+
         <SwitchPreferenceCompat
             app:key="appel_depuis_liste"
             app:title="@string/pref_appel_depuis_liste"

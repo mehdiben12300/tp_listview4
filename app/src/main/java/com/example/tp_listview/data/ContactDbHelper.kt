@@ -15,12 +15,13 @@ import android.util.Log
  */
 class ContactDbHelper private constructor(
     private val appContext: Context,
-    databaseName: String?
-) : SQLiteOpenHelper(appContext, databaseName, null, DATABASE_VERSION) {
+    databaseName: String?,
+    version: Int = DATABASE_VERSION
+) : SQLiteOpenHelper(appContext, databaseName, null, version) {
 
     companion object {
         const val DATABASE_NAME = "contacts.db"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
         private const val TAG = "ContactDbHelper"
 
         @Volatile
@@ -33,8 +34,8 @@ class ContactDbHelper private constructor(
             }
 
         /** Helper sur une base en mémoire (nom null), réservé aux tests instrumentés. */
-        fun creerPourTests(context: Context): ContactDbHelper =
-            ContactDbHelper(context.applicationContext, null)
+        fun creerPourTests(context: Context, version: Int = DATABASE_VERSION): ContactDbHelper =
+            ContactDbHelper(context.applicationContext, null, version)
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -43,18 +44,21 @@ class ContactDbHelper private constructor(
     }
 
     /**
-     * Version 1 : aucune migration n'existe encore. En cas de changement de schéma,
-     * incrémenter DATABASE_VERSION et ajouter ici une étape « if (oldVersion < N) »
-     * (ALTER TABLE ...) pour conserver les données. Par défaut, on recrée la table.
+     * Migration SQLite :
+     * - V1 -> V2 (Bonus) : ajout de la colonne favori INTEGER DEFAULT 0 via ALTER TABLE sans perte des données.
      */
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        Log.w(TAG, "Mise à jour de la base $oldVersion -> $newVersion : recréation de la table")
-        db.execSQL(ContactContract.SQL_DROP_TABLE)
-        onCreate(db)
+        Log.i(TAG, "Mise à niveau de la base : $oldVersion -> $newVersion")
+        if (oldVersion < 2) {
+            db.execSQL(ContactContract.SQL_UPGRADE_V1_TO_V2)
+            Log.i(TAG, "Migration V1 -> V2 effectuée (colonne favori ajoutée sans perte)")
+        }
     }
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        onUpgrade(db, oldVersion, newVersion)
+        Log.w(TAG, "Rétrogradation de la base $oldVersion -> $newVersion : recréation de la table")
+        db.execSQL(ContactContract.SQL_DROP_TABLE)
+        onCreate(db)
     }
 
     private fun insererContactsDemo(db: SQLiteDatabase) {
@@ -64,25 +68,25 @@ class ContactDbHelper private constructor(
         val demo = listOf(
             Contact(nom = "Dupont", prenom = "Claire", telephone = "06 12 34 56 78",
                 email = "claire.dupont@example.com", photoUri = avatar("avatar_claire"),
-                latitude = 48.8584, longitude = 2.2945),
+                latitude = 48.8584, longitude = 2.2945, favori = true),
             Contact(nom = "Martin", prenom = "Thomas", telephone = "07 23 45 67 89",
                 email = "thomas.martin@example.com", photoUri = avatar("avatar_thomas"),
-                latitude = 45.7578, longitude = 4.8320),
+                latitude = 45.7578, longitude = 4.8320, favori = false),
             Contact(nom = "Bernard", prenom = "Sophie", telephone = "06 98 76 54 32",
                 email = "sophie.bernard@example.com", photoUri = avatar("avatar_sophie"),
-                latitude = 43.2951, longitude = 5.3744),
+                latitude = 43.2951, longitude = 5.3744, favori = true),
             // Contact sans coordonnées GPS (1/2)
             Contact(nom = "Petit", prenom = "Lucas", telephone = "07 11 22 33 44",
-                email = "lucas.petit@example.com", photoUri = avatar("avatar_lucas")),
+                email = "lucas.petit@example.com", photoUri = avatar("avatar_lucas"), favori = false),
             Contact(nom = "Ben Salah", prenom = "Youssef", telephone = "+216 98 765 432",
                 email = "youssef.bensalah@example.com", photoUri = avatar("avatar_julien"),
-                latitude = 36.8065, longitude = 10.1815),
+                latitude = 36.8065, longitude = 10.1815, favori = true),
             // Contact sans coordonnées GPS (2/2), nom avec apostrophe
             Contact(nom = "O'Neil", prenom = "Sarah", telephone = "06 55 44 33 22",
-                email = null, photoUri = null),
+                email = null, photoUri = null, favori = false),
             Contact(nom = "Trabelsi", prenom = "Amira", telephone = "+216 22 333 444",
                 email = "amira.trabelsi@example.com", photoUri = null,
-                latitude = 36.8625, longitude = 10.1956)
+                latitude = 36.8625, longitude = 10.1956, favori = false)
         )
 
         db.beginTransaction()
